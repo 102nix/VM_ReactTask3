@@ -1,18 +1,30 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import { Pagination } from './Pagination'
 import { User } from './User'
 import { SearchStatus } from './SearchStatus'
+import { paginate } from '../utils/paginate'
 import api from '../api'
 
-export const Users = ({users, onDelete}) => {
-  // console.log(api.users.fetchAll())
+export const Users = ({users: allUsers, onDelete}) => {
+
+  const count = allUsers.length
+  const pageSize = 4
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const handlePageChange = (pageIndex) => {
+    console.log('page: ', pageIndex)
+    setCurrentPage(pageIndex)
+  }
+
+  const users = paginate(allUsers, currentPage, pageSize)
 
   return (
     <>
       <h2>
-        <SearchStatus length={users.length}  />
+        <SearchStatus length={count}  />
       </h2>
       {
-        users.length > 0 &&
+        count > 0 &&
         <table className="table">
           <thead>
             <tr>
@@ -49,7 +61,12 @@ export const Users = ({users, onDelete}) => {
           </tbody>
         </table>
       }
-      
+      <Pagination 
+        itemsCount={count} 
+        pageSize={pageSize} 
+        onPageChange={handlePageChange}
+        currentPage={currentPage} 
+      />
     </>
   )
 }
