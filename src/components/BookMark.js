@@ -1,20 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-export const BookMark = () => {
-
-  const [myClassName, setMyClassName] = useState('bi bi-bookmark')
-
-  const changeCls = () => {
-    if (myClassName === 'bi bi-bookmark') {
-      setMyClassName('bi bi-bookmark-fill')
-    } else {
-      setMyClassName('bi bi-bookmark')
-    }
-  }
+export const BookMark = ({ status, handlerStatus, id }) => {
 
   return (
     <>
-      <i className={ myClassName } onClick={changeCls} style={{cursor: 'pointer'}}></i>
+      <i className={ status ? 'bi bi-bookmark-fill' : 'bi bi-bookmark' } onClick={() => handlerStatus(id)} style={{cursor: 'pointer'}}></i>
     </>
   )
 }

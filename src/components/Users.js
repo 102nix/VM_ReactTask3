@@ -3,20 +3,20 @@ import { Pagination } from './Pagination'
 import { User } from './User'
 import { SearchStatus } from './SearchStatus'
 import { paginate } from '../utils/paginate'
-import api from '../api'
 
-export const Users = ({users: allUsers, onDelete}) => {
+export const Users = ({users: allUsers, onDelete, onStatus}) => {
 
+  //pagination
   const count = allUsers.length
   const pageSize = 4
   const [currentPage, setCurrentPage] = useState(1)
 
   const handlePageChange = (pageIndex) => {
-    console.log('page: ', pageIndex)
     setCurrentPage(pageIndex)
   }
 
   const users = paginate(allUsers, currentPage, pageSize)
+  //pagination
 
   return (
     <>
@@ -41,11 +41,14 @@ export const Users = ({users: allUsers, onDelete}) => {
             {
               users.map(user => (<tr>
                 <User
+                  id={user._id}
                   name={user.name}
                   qualities={user.qualities} 
                   profession={user.profession}
                   completedMeetings={user.completedMeetings}
                   rate={user.rate}
+                  status={user.status}
+                  onStatus={onStatus}
                  />
                 <td>
                   <button 

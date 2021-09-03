@@ -11,11 +11,23 @@ export default function App() {
     setUsers(newUser)
   }
 
+  const handlerStatusBookmark = (userId) => {
+    console.log(userId)
+    users.forEach(user => {
+      if (user._id === userId) {
+        user.status = !user.status
+      }
+    })
+    const newUser = [...users]
+    setUsers(newUser)
+  }
+
   return (
     <div className="container">
       <Users 
         users={users}
         onDelete={handlerDelete}  
+        onStatus={handlerStatusBookmark}
       />    
     </div>
   )
