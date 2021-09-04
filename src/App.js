@@ -12,14 +12,13 @@ export default function App() {
   }
 
   const handlerStatusBookmark = (userId) => {
-    console.log(userId)
-    users.forEach(user => {
+    const newUsers = users.map(user => {
       if (user._id === userId) {
         user.status = !user.status
       }
+      return user
     })
-    const newUser = [...users]
-    setUsers(newUser)
+    setUsers(newUsers)
   }
 
   return (
