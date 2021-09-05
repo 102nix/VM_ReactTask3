@@ -3,6 +3,7 @@ import { Pagination } from './Pagination'
 import { User } from './User'
 import { SearchStatus } from './SearchStatus'
 import { paginate } from '../utils/paginate'
+import api from '../api'
 
 export const Users = ({users: allUsers, onDelete, onStatus}) => {
 
@@ -41,13 +42,14 @@ export const Users = ({users: allUsers, onDelete, onStatus}) => {
             {
               users.map(user => (<tr>
                 <User
-                  id={user._id}
-                  name={user.name}
-                  qualities={user.qualities} 
-                  profession={user.profession}
-                  completedMeetings={user.completedMeetings}
-                  rate={user.rate}
-                  status={user.status}
+                  // id={user._id}
+                  // name={user.name}
+                  // qualities={user.qualities} 
+                  // profession={user.profession}
+                  // completedMeetings={user.completedMeetings}
+                  // rate={user.rate}
+                  // status={user.status}
+                  {...user}
                   onStatus={onStatus}
                  />
                 <td>
