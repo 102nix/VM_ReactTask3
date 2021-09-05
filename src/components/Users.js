@@ -42,14 +42,13 @@ export const Users = ({users: allUsers, onDelete, onStatus}) => {
             {
               users.map(user => (<tr>
                 <User
-                  // id={user._id}
-                  // name={user.name}
-                  // qualities={user.qualities} 
-                  // profession={user.profession}
-                  // completedMeetings={user.completedMeetings}
-                  // rate={user.rate}
-                  // status={user.status}
-                  {...user}
+                  id={user._id}
+                  name={user.name}
+                  qualities={user.qualities} 
+                  profession={user.profession}
+                  completedMeetings={user.completedMeetings}
+                  rate={user.rate}
+                  status={user.status}
                   onStatus={onStatus}
                  />
                 <td>
