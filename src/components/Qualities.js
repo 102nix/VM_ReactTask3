@@ -5,7 +5,12 @@ export const Qualities = ({qualities}) => {
     <>
       {
         qualities.map(el => (
-          <span className={`badge bg-${el.color}`}>{el.name}</span>
+          <span 
+            className={`badge bg-${el.color}`}
+            key={el._id}
+          >
+            {el.name}
+          </span>
         ))
       }
     </>
