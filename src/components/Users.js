@@ -42,7 +42,8 @@ export const Users = () => {
   }
 
   const filteredUsers = selectedProf 
-    ? allUsers.filter(user => user.profession._id === selectedProf._id) 
+    // ? allUsers.filter(user => user.profession._id === selectedProf._id) 
+    ? allUsers.filter(user => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
     : allUsers
   const count = filteredUsers.length
 
