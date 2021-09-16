@@ -2,7 +2,7 @@ import React from 'react'
 import { Qualities } from './Qualities'
 import { BookMark } from './BookMark'
 
-export const User = ({ name, qualities, profession, completedMeetings, rate, status, onStatus, id }) => {
+export const User = ({ name, qualities, profession, completedMeetings, rate, status, onStatus, _id }) => {
   return (
     <>
       <td>{name}</td>
@@ -18,7 +18,7 @@ export const User = ({ name, qualities, profession, completedMeetings, rate, sta
         <BookMark
             status={status}
             handlerStatus={onStatus}
-            id={id}
+            id={_id}
         />
       </td> 
     </>

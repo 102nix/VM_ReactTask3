@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Pagination } from './Pagination'
-import { User } from './User'
+// import { User } from './User'
 import { SearchStatus } from './SearchStatus'
 import { paginate } from '../utils/paginate'
 import { GroupList } from '../components/GroupList'
 import api from '../api'
+import { UsersTable } from './UsersTable'
+import _ from 'lodash'
 
 export const Users = () => {
 
   const [allUsers, setUsers] = useState([])
   const [professions, setProfessions] = useState()
   const [selectedProf, setSelectedProf] = useState()
-
+  const [sortBy, setSortBy] = useState({path: 'name', order: "asc"})
 
   useEffect(() => {
     api.professions.fetchAll().then(data => setProfessions(data))
@@ -26,7 +28,7 @@ export const Users = () => {
   const handlerStatusBookmark = (userId) => {
     const newUsers = allUsers.map(user => {
       if (user._id === userId) {
-        user.status = !user.status
+        user.bookmark = !user.bookmark
       }
       return user
     })
@@ -46,8 +48,8 @@ export const Users = () => {
     ? allUsers.filter(user => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
     : allUsers
   const count = filteredUsers.length
-
-  const users = paginate(filteredUsers, currentPage, pageSize)
+  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
+  const users = paginate(sortedUsers, currentPage, pageSize)
 
   //pagination
 
@@ -58,6 +60,10 @@ export const Users = () => {
 
   const clearFilter = () => {
     setSelectedProf()
+  }
+
+  const handleSort = (item) => {
+    setSortBy(item)
   }
 
   return (
@@ -79,44 +85,13 @@ export const Users = () => {
           : <SearchStatus length={count}  />
         } 
         {count > 0 &&
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Имя</th>
-                <th scope="col">Качества</th>
-                <th scope="col">Профессия</th>
-                <th scope="col">Встретился, раз</th>
-                <th scope="col">Оценка</th>
-                <th>Избранное</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                users.map(user => (<tr key={user._id}>
-                  <User
-                    id={user._id}
-                    name={user.name}
-                    qualities={user.qualities} 
-                    profession={user.profession}
-                    completedMeetings={user.completedMeetings}
-                    rate={user.rate}
-                    status={user.status}
-                    onStatus={handlerStatusBookmark}
-                  />
-                  <td>
-                    <button 
-                      type="button" 
-                      className="btn btn-danger"
-                      onClick={() => handlerDelete(user._id)}
-                    >
-                      delete
-                    </button>
-                  </td>
-                </tr>))
-              }
-            </tbody>
-          </table>
+          <UsersTable  
+            users={users}
+            selectedSort={sortBy}
+            onStatus={handlerStatusBookmark}
+            onDelete={handlerDelete}
+            onSort={handleSort}
+          />
       }
         <div className="d-flex justify-content-center">
           <Pagination 
