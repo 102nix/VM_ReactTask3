@@ -13,6 +13,7 @@ export const TableHeader = ({onSort, selectedSort, columns}) => {
       onSort({path: path, order: 'asc'})
     }
   }
+  
   return (
     <thead>
       <tr>
