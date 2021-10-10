@@ -16,6 +16,20 @@ export const Users = () => {
   const [selectedProf, setSelectedProf] = useState()
   const [sortBy, setSortBy] = useState({path: 'name', order: "asc"})
 
+  const [searchName, setSearchName] = useState('') //for input search
+  const [findUsersArr, setFindUsersArr] = useState(null)
+
+  const handlerSearchName = (e) => {
+    setSearchName(e.target.value)
+    const findUsers = []
+    allUsers.forEach(user => {
+      if (user.name.indexOf(e.target.value) !== -1) {
+        findUsers.push(user)
+      }
+    })
+    setFindUsersArr(findUsers)
+  }
+
   const params = useParams()
   const { userId } = params
 
@@ -52,8 +66,8 @@ export const Users = () => {
     ? allUsers.filter(user => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
     : allUsers
   const count = filteredUsers.length
-
-  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
+ 
+  const sortedUsers = _.orderBy( findUsersArr ? findUsersArr: filteredUsers, [sortBy.path], [sortBy.order])
   
   const users = paginate(sortedUsers, currentPage, pageSize)
 
@@ -62,10 +76,14 @@ export const Users = () => {
   const handleProfessionalSelect = item => {
     setCurrentPage(1)
     setSelectedProf(item)
+    setFindUsersArr(null)
+    setSearchName('')
   }
 
   const clearFilter = () => {
     setSelectedProf()
+    setFindUsersArr(null)
+    setSearchName('')
   }
 
   const handleSort = (item) => {
@@ -94,7 +112,13 @@ export const Users = () => {
             {allUsers.length === 0
               ? <h2>Loading...</h2>
               : <SearchStatus length={count}  />
-            } 
+            }
+            <input
+              type="text" 
+              placeholder="Search..."
+              value={searchName}
+              onChange={(e) => handlerSearchName(e)}
+            /> 
             {count > 0 &&
               <UsersTable  
                 users={users}
