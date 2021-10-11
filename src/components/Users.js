@@ -23,7 +23,7 @@ export const Users = () => {
     setSearchName(e.target.value)
     const findUsers = []
     allUsers.forEach(user => {
-      if (user.name.indexOf(e.target.value) !== -1) {
+      if (user.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) {
         findUsers.push(user)
       }
     })
