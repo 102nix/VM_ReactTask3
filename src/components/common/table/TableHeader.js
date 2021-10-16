@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types"
 
-export const TableHeader = ({onSort, selectedSort, columns}) => {
+const TableHeader = ({onSort, selectedSort, columns}) => {
 
   const handleSort = (path) => {
     if (selectedSort.path === path) {
@@ -39,6 +39,7 @@ export const TableHeader = ({onSort, selectedSort, columns}) => {
     </thead>
   )
 }
+export default TableHeader
 
 TableHeader.propTypes = {
   onSort: PropTypes.func.isRequired,

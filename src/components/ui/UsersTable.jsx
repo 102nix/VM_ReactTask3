@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from 'prop-types'
 // import { TableHeader } from "./TableHeader"
 // import { TableBody } from "./TableBody"
-import { BookMark } from "./BookMark"
-import { Qualities } from "./Qualities"
-import { Table } from "./Table"
+import { BookMark } from "../common/BookMark"
+import { Qualities } from "./qualities/Qualities"
+import Table from "../common/table";
 import { Link } from 'react-router-dom'
 
 export const UsersTable = ({users, onSort, onStatus, selectedSort,  onDelete}) => {

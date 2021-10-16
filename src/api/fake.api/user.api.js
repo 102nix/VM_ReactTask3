@@ -21,7 +21,7 @@ const qualities = {
         color: "danger"
     },
     handsome: {
-        _id: "67rdca3eeb7f6fgeed471102",
+        _id: "67rdca3eeb7f6fgeed471103",
         name: "Красавчик",
         color: "info"
     },
@@ -32,7 +32,7 @@ const qualities = {
     }
 };
 
- const users = [
+const users = [
     {
         _id: "67rdca3eeb7f6fgeed471815",
         name: "Джон Дориан",
@@ -142,21 +142,37 @@ const qualities = {
         bookmark: false
     }
 ];
+if (!localStorage.getItem("users")) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
 
 const fetchAll = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
-            resolve(users);
+            resolve(JSON.parse(localStorage.getItem("users")));
         }, 2000);
     });
-const getById = (id) => 
-    new Promise(resolve => {
-        window.setTimeout(() => {
-            resolve(users.find(user => user._id === id))
-        }, 1000)
-    })
+const update = (id, data) =>
+    new Promise((resolve) => {
+        const users = JSON.parse(localStorage.getItem("users"));
+        const userIndex = users.findIndex((u) => u._id === id);
+        users[userIndex] = { ...users[userIndex], ...data };
+        localStorage.setItem("users", JSON.stringify(users));
+        resolve(users[userIndex]);
+    });
 
+const getById = (id) =>
+    new Promise((resolve) => {
+        window.setTimeout(function () {
+            resolve(
+                JSON.parse(localStorage.getItem("users")).find(
+                    (user) => user._id === id
+                )
+            );
+        }, 1000);
+    });
 export default {
     fetchAll,
-    getById
+    getById,
+    update
 };
