@@ -1,63 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import api from '../../../api/index'
-import { Qualities } from '../../ui/qualities/Qualities'
-import { useHistory } from 'react-router-dom'
-import { transformationQualities } from '../../../utils/preparingEditDataForm'
-
+import React, { useEffect, useState } from "react";
+import api from "../../../api/index"
+import { UserInfoCard } from "../../ui/UserInfoCard";
+import { CurrentCommentsUser } from '../../common/CurrentCommentsUser'
+import { AddNewComment } from "../../common/AddNewComment"
 
 export const UserPage = ({ userId }) => {
 
-  const history = useHistory()
-
-  console.log('UserPage userID: ', userId)
-
   const [user, setUser] = useState()
   const [qualities, setQualities] = useState({})
-
+  const [allUsers, setUsers] = useState([])
+  const [commentsCurrentUser, setCommentsCurrentUser] = useState([])
 
   useEffect(() => {
-    api.users.getById(userId).then(data => setUser(data))
-    api.qualities.fetchAll().then(data => setQualities(data))
-  },[])
+    api.users.getById(userId).then((data) => setUser(data))
+    api.qualities.fetchAll().then((data) => setQualities(data))
+    api.users.fetchAll().then(data => setUsers(data))
+    api.comments.fetchCommentsForUser(userId).then((data) => setCommentsCurrentUser(data))
+  }, [])
 
-
-  const handleValuesForModify = () => {
-    console.log('UUUUSSSEEERRR: ', user)
-    history.push({
-      pathname: `/users/${userId}/edit`,
-      userInfo: {
-        name: user.name, 
-        email: user.email ? user.email : '',
-        currentProfession: user.profession._id,
-        // qualities: user.qualities,
-        qualities: transformationQualities (qualities, user.qualities),
-        sex: user.sex
-      },    
-    })
-    
+  const deleteComment = (id) => {
+    api.comments.remove(id)
+    api.comments.fetchCommentsForUser(userId).then((data) => setCommentsCurrentUser(data))
   }
+
   return (
     <>
       {user ? (
-        <>
-          <h2>{user.name}</h2>
-          <h2>Профессия: {user.profession.name}</h2>
-          {user.qualities &&
-            <Qualities qualities={user.qualities} />
-          }
-          <div>completedMeetings: {user.completedMeetings}</div>
-          <h2>Rate: {user.rate}</h2>
-          <button
-            className='btn btn-secondary'
-            onClick={handleValuesForModify}
-          >
-            Изменить
-          </button>
-        </>
+        <div className="container">
+          <div className="row gutters-sm">
+            <div className="col-md-4 mb-3">
+              <UserInfoCard
+                user={user}
+                userId={userId}
+                qualities={qualities}
+              />
+            </div>
+            <div className="col-md-8">
+              <AddNewComment allUsers={allUsers} />
+              {commentsCurrentUser.length > 0 &&
+                <CurrentCommentsUser 
+                  comments={commentsCurrentUser}
+                  allUsers={allUsers}
+                  deleteComment={deleteComment}
+                />
+              } 
+            </div>
+          </div>
+        </div>
       ) : (
         <h2>Loading...</h2>
-      )
-      }
+      )}
     </>
   )
 }

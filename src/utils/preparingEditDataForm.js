@@ -5,7 +5,7 @@
     Object.keys(qualities).forEach(optionName => {
       dataQualities.forEach(dat => {
         if (dataQualities.length > 0) {
-          if (qualities[optionName].name === dat.label) {
+          if (qualities[optionName].name === (dat.label || dat.name)) {
             tempQualities.push(qualities[optionName])
           }
         } 
@@ -35,3 +35,13 @@
     return qualitiesValues
   }
 
+
+export const calculateUserId = (allUsers, userName) => {
+  let userId = ''
+  allUsers.forEach(user => {
+    if (user.name === userName) {
+      userId = user._id
+    }
+  })
+  return userId
+}

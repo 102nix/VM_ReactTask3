@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 
-export const SelectField = ({ label, value, onChange, defaultOption, options, error }) => {
+export const SelectField = ({ label, value, onChange, defaultOption, options, error, name }) => {
 
   const handleChange = ({ target }) => {
     onChange({name: target.name, value: target.value})
@@ -27,7 +27,7 @@ export const SelectField = ({ label, value, onChange, defaultOption, options, er
         label="Выберите вашу профессию" 
         className={getInputClasses()}
         id="validationCustom04" 
-        name="profession"
+        name={name}
         value={value}
         onChange={handleChange}
       >
@@ -57,5 +57,6 @@ SelectField.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.string,
-  options: PropTypes.oneOfType([PropTypes.object,PropTypes.array])
+  options: PropTypes.oneOfType([PropTypes.object,PropTypes.array]),
+  name: PropTypes.string
 }
