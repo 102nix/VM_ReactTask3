@@ -36,12 +36,19 @@
   }
 
 
-export const calculateUserId = (allUsers, userName) => {
-  let userId = ''
-  allUsers.forEach(user => {
-    if (user.name === userName) {
-      userId = user._id
+  export const getProfessionById = (professions, id) => {
+    for (const prof in professions) {
+      const profData = professions[prof]
+      if (profData._id === id) return profData
     }
-  })
-  return userId
-}
+  }
+
+// export const calculateUserId = (allUsers, userName) => {
+//   let userId = ''
+//   allUsers.forEach(user => {
+//     if (user.name === userName) {
+//       userId = user._id
+//     }
+//   })
+//   return userId
+// }

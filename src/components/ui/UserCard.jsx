@@ -1,15 +1,20 @@
-import React from "react";
+import React from "react"
+import PropTypes from 'prop-types'
 import { useHistory } from "react-router-dom"
 
-export const UserCard = ({ user, userId }) => {
+export const UserCard = ({ user }) => {
   
   const history = useHistory()
+
+  const handleClick = () => {
+    history.push(`${history.location.pathname}/edit`)
+  }
   
   return (
     <div className="card mb-3">
       <div className="card-body">
         <button
-          onClick={() => history.push(`/users/${userId}/edit`)}
+          onClick={handleClick}
           className="position-absolute top-0 end-0 btn btn-light btn-sm"
         >
           <i className="bi bi-gear"></i>
@@ -21,7 +26,7 @@ export const UserCard = ({ user, userId }) => {
             )
               .toString(36)
               .substring(7)}.svg`}
-            classNameName="rounded-circle shadow-1-strong me-3"
+            className="rounded-circle shadow-1-strong me-3"
             alt="avatar"
             width="65"
             height="65"
@@ -41,5 +46,9 @@ export const UserCard = ({ user, userId }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
+UserCard.propTypes = {
+  user: PropTypes.object
+}

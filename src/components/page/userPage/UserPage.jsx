@@ -1,27 +1,17 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api/index"
-import { UserInfoCard } from "../../ui/UserInfoCard";
-import { CurrentCommentsUser } from '../../common/CurrentCommentsUser'
-import { AddNewComment } from "../../common/AddNewComment"
+import { UserCard } from "../../ui/UserCard";
+import { QualitiesCard } from "../../ui/QualitiesCard";
+import { MeetingsCard } from "../../ui/MeetingsCard";
+import { Comments } from "../../ui/Comments";
 
 export const UserPage = ({ userId }) => {
 
   const [user, setUser] = useState()
-  const [qualities, setQualities] = useState({})
-  const [allUsers, setUsers] = useState([])
-  const [commentsCurrentUser, setCommentsCurrentUser] = useState([])
-
+ 
   useEffect(() => {
     api.users.getById(userId).then((data) => setUser(data))
-    api.qualities.fetchAll().then((data) => setQualities(data))
-    api.users.fetchAll().then(data => setUsers(data))
-    api.comments.fetchCommentsForUser(userId).then((data) => setCommentsCurrentUser(data))
   }, [])
-
-  const deleteComment = (id) => {
-    api.comments.remove(id)
-    api.comments.fetchCommentsForUser(userId).then((data) => setCommentsCurrentUser(data))
-  }
 
   return (
     <>
@@ -29,21 +19,12 @@ export const UserPage = ({ userId }) => {
         <div className="container">
           <div className="row gutters-sm">
             <div className="col-md-4 mb-3">
-              <UserInfoCard
-                user={user}
-                userId={userId}
-                qualities={qualities}
-              />
+              <UserCard user={user} />
+              <QualitiesCard data={user.qualities} />
+              <MeetingsCard value={user.completedMeetings} />
             </div>
             <div className="col-md-8">
-              <AddNewComment allUsers={allUsers} />
-              {commentsCurrentUser.length > 0 &&
-                <CurrentCommentsUser 
-                  comments={commentsCurrentUser}
-                  allUsers={allUsers}
-                  deleteComment={deleteComment}
-                />
-              } 
+              <Comments />
             </div>
           </div>
         </div>

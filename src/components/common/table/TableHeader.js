@@ -26,11 +26,11 @@ const TableHeader = ({onSort, selectedSort, columns}) => {
           >
             {
               (columns[column].path === selectedSort.path && selectedSort.order === 'asc') &&
-                <i class="bi bi-caret-down-fill"></i>
+                <i className="bi bi-caret-down-fill"></i>
             }
             { 
               (columns[column].path === selectedSort.path && selectedSort.order === 'desc') &&
-              <i class="bi bi-caret-up-fill"></i>
+              <i className="bi bi-caret-up-fill"></i>
             }
             {columns[column].name}
           </th>

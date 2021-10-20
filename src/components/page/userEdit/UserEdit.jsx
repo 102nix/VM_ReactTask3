@@ -4,36 +4,28 @@ import { SelectField } from '../../common/form/SelectField'
 import { RadioField } from '../../common/form/RadioField'
 import { MultiSelectField } from '../../common/form/MultiSelectField'
 import { useParams, useHistory  } from 'react-router-dom'
-import { prepareQualities, transformationQualities } from '../../../utils/preparingEditDataForm'
+import { prepareQualities, transformationQualities, getProfessionById } from '../../../utils/preparingEditDataForm'
 import api from '../../../api/index'
 import * as yup from 'yup'
+import { BackHistoryButton } from '../../common/form/BackButton'
 
 
 export const UserEdit = () => {
 
   const { userId } = useParams()
   const history = useHistory()
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    profession: "",
+    sex: "male",
+    qualities: []
+  })
+  const [professions, setProfessions] = useState([])
   const [qualities, setQualities] = useState({})
-  const [professions, setProfessions] = useState()
   const [errors, setErrors] = useState({})
-
-  const [data, setData] = useState({})
-
-  useEffect(() => {
-    api.users.getById(userId).then(data => setData({
-      name: data.name,
-      email: data.email, 
-      profession: data.profession._id,
-      sex: data.sex,
-      qualities: data.qualities,
-    }))
-    api.professions.fetchAll().then(data => setProfessions(data))
-    api.qualities.fetchAll().then(data => setQualities(data))
-  },[])
-
-  console.log('Data: ', data)
-
+  
   const handlerChange = (target) => {
     setData(prevSate => ({
       ...prevSate,
@@ -62,39 +54,42 @@ export const UserEdit = () => {
 
   ////////////////////////////////////////////////////
   const handleSubmit = (e) => {
-
     e.preventDefault()
     const isValid = validate()
     if (!isValid) return
 
-    //prepare qualities:
-    data.qualities = prepareQualities(qualities, data.qualities)
-    //prepare professions:
-    Object.keys(professions).forEach(profession => {
-      if(data.profession === professions[profession]._id) {
-        data.profession = {...professions[profession]}
-      }
-    })
-    //
-
-    api.users.update(userId, data)
-    history.push(`/users/${userId}`)
-    setData({})
+    const { profession, qualities } = data
+    api.users
+      .update(userId, {
+        ...data,
+        profession: getProfessionById(professions, profession),
+        qualities: prepareQualities(qualities, data.qualities)
+      })
+      .then(data => history.push(`/users/${data._id}`))
   }
 
+  useEffect(() => {
+    setIsLoading(true)
+    api.users.getById(userId).then(({ profession, ...data }) => 
+      setData(prevState => ({
+        ...prevState,
+        ...data,
+        profession: profession._id
+      }))
+  )
+    api.qualities.fetchAll().then(data => setQualities(data)) 
+    api.professions.fetchAll().then(data => setProfessions(data))
+  },[])
+  useEffect(() => {
+    if (data._id) setIsLoading(false)
+  }, [data])
+
   return (
-    <>
-      <button 
-        className="btn btn-primary mb-3 mt-2"
-        onClick={()=> {history.push(`/users/${userId}`)}}
-      >
-        Назад
-      </button>
-      {professions === undefined ? (
-        <div>
-          <h2>Loading...</h2>
-        </div>
-      ) : (
+    <div className="container mt-5">
+      <BackHistoryButton />
+      <div className="row">
+        <div className="col-md-6 offset-md-3 shadow p-4">
+      {!isLoading && Object.keys(professions).length > 0 ? (
         <form onSubmit={handleSubmit}>
           <TextField 
             label="Имя"
@@ -112,7 +107,7 @@ export const UserEdit = () => {
           />
           <SelectField
             label="Выберите свою профессию" 
-            // defaultOption={data.profession}
+            defaultOption="Choose..."
             options={professions}
             onChange={handlerChange}
             value={data.profession}
@@ -131,6 +126,7 @@ export const UserEdit = () => {
             label="Выберите ваш пол"
           />
           <MultiSelectField 
+            // defaultValue={data.qualities}
             options={qualities}
             values={transformationQualities(qualities, data.qualities)}
             onChange={handlerChange}
@@ -145,7 +141,11 @@ export const UserEdit = () => {
             Submit
           </button>
         </form>
+      ) : (
+        "Loading..."
       )}
-     </>
+      </div>
+      </div>
+     </div>
   )
 }
