@@ -6,9 +6,11 @@ import { GroupList } from '../../common/GroupList'
 import api from '../../../api/index'
 import { UsersTable } from '../../ui/UsersTable'
 import _ from 'lodash'
+import { useUser } from '../../../hooks/useUsers'
 
 export const UsersListPage = () => {
-  const [allUsers, setUsers] = useState([])
+  const { users } = useUser()
+  console.log(users)
   const [professions, setProfessions] = useState()
   const [selectedProf, setSelectedProf] = useState()
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
@@ -19,7 +21,7 @@ export const UsersListPage = () => {
   const handlerSearchName = (e) => {
     setSearchName(e.target.value)
     const findUsers = []
-    allUsers.forEach((user) => {
+    users.forEach((user) => {
       if (
         user.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
       ) {
@@ -31,22 +33,24 @@ export const UsersListPage = () => {
 
   useEffect(() => {
     api.professions.fetchAll().then((data) => setProfessions(data))
-    api.users.fetchAll().then((data) => setUsers(data))
+    // api.users.fetchAll().then((data) => setUsers(data))
   }, [])
 
   const handlerDelete = (userId) => {
-    const newUser = allUsers.filter((user) => user._id !== userId)
-    setUsers(newUser)
+    // const newUser = allUsers.filter((user) => user._id !== userId)
+    // setUsers(newUser)
+    console.log(userId)
   }
 
   const handlerStatusBookmark = (userId) => {
-    const newUsers = allUsers.map((user) => {
+    const newUsers = users.map((user) => {
       if (user._id === userId) {
         user.bookmark = !user.bookmark
       }
       return user
     })
-    setUsers(newUsers)
+    // setUsers(newUsers)
+    console.log(newUsers)
   }
 
   // pagination
@@ -58,16 +62,16 @@ export const UsersListPage = () => {
   }
 
   const filteredUsers = selectedProf ? (
-    allUsers.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
+    users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
   ) : (
-    allUsers
+    users
   )
 
   const count = filteredUsers.length
 
   const sortedUsers = _.orderBy(findUsersArr || filteredUsers, [sortBy.path], [sortBy.order]) // findUsersArr ? findUsersArr : filteredUsers
 
-  const users = paginate(sortedUsers, currentPage, pageSize)
+  const usersPaginate = paginate(sortedUsers, currentPage, pageSize)
 
   // pagination
 
@@ -103,7 +107,7 @@ export const UsersListPage = () => {
         </div>
       )}
       <div className="d-flex flex-column">
-        {allUsers.length === 0 ? (
+        {users.length === 0 ? (
           <h2>Loading...</h2>
         ) : (
           <SearchStatus length={count} />
@@ -116,7 +120,7 @@ export const UsersListPage = () => {
         />
         {count > 0 && (
           <UsersTable
-            users={users}
+            users={usersPaginate}
             selectedSort={sortBy}
             onStatus={handlerStatusBookmark}
             onDelete={handlerDelete}

@@ -4,6 +4,7 @@ import { NavBar } from './components/ui/NavBar'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Login } from './layouts/Login'
 import { Main } from './layouts/Main'
+import { ToastContainer } from 'react-toastify'
 
 export default function App () {
   return (
@@ -15,6 +16,7 @@ export default function App () {
         <Route exact path="/" component={Main} />
         <Redirect to="/" />
       </Switch>
+      <ToastContainer />
     </div>
   )
 }
