@@ -2,19 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { TextField } from '../common/form/TextField'
 // import { validator } from '../../utils/validator'
 import { CheckBoxField } from '../common/form/CheckBoxField'
-import * as yup from 'yup';
+import * as yup from 'yup'
 
 export const LoginForm = () => {
-  
   const [data, setData] = useState({
-    email: '', password: '', stayOn: false
+    email: '',
+    password: '',
+    stayOn: false
   })
-  
+
   const [errors, setErrors] = useState({})
 
   const handlerChange = (target) => {
     console.log(target)
-    setData(prevSate => ({
+    setData((prevSate) => ({
       ...prevSate,
       [target.name]: target.value
     }))
@@ -22,21 +23,35 @@ export const LoginForm = () => {
 
   const validate = () => {
     // const errors =  validator(data, validatorConfig)
-    validateScheme.validate(data).then(() => setErrors({})).catch(err => setErrors({[err.path]: err.message}))
+    validateScheme
+      .validate(data)
+      .then(() => setErrors({}))
+      .catch((err) => setErrors({ [err.path]: err.message }))
     // setErrors(errors)
-    return Object.keys(errors).length === 0 
+    return Object.keys(errors).length === 0
   }
 
   const isValid = Object.keys(errors).length === 0
-  
-  let validateScheme = yup.object().shape({
-    password: yup.string().required('Пароль обязателен для заполнения')
-    .matches(/(?=.*[A-Z])/,'Пароль должен содержать хотябы 1 заглавную букву')
-    .matches(/(?=.*[0-9])/,'Пароль должен содержать хотябы 1 число')
-    .matches(/(?=.*[!@#$%^&*])/,'Пароль должен содержать один из специальных символов !@#$%^&*')
-    .matches(/(?=.{8,})/,'Пароль должен состоять минимум из 8 символов'),
-    email: yup.string().required('Email обязательно для заполнения').email('Email введён некорректно'),
-  }) 
+
+  const validateScheme = yup.object().shape({
+    password: yup
+      .string()
+      .required('Пароль обязателен для заполнения')
+      .matches(
+        /(?=.*[A-Z])/,
+        'Пароль должен содержать хотябы 1 заглавную букву'
+      )
+      .matches(/(?=.*[0-9])/, 'Пароль должен содержать хотябы 1 число')
+      .matches(
+        /(?=.*[!@#$%^&*])/,
+        'Пароль должен содержать один из специальных символов !@#$%^&*'
+      )
+      .matches(/(?=.{8,})/, 'Пароль должен состоять минимум из 8 символов'),
+    email: yup
+      .string()
+      .required('Email обязательно для заполнения')
+      .email('Email введён некорректно')
+  })
 
   // const validatorConfig = {
   //   email: {
@@ -64,7 +79,7 @@ export const LoginForm = () => {
   //   }
   // }
 
-  useEffect (() => {
+  useEffect(() => {
     validate()
   }, [data])
 
@@ -77,14 +92,14 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField 
+      <TextField
         label="Электронная почта"
         name="email"
         value={data.email}
         onChange={handlerChange}
         error={errors.email}
       />
-      <TextField 
+      <TextField
         label="Пароль"
         type="password"
         name="password"
@@ -92,14 +107,10 @@ export const LoginForm = () => {
         onChange={handlerChange}
         error={errors.password}
       />
-      <CheckBoxField 
-        value={data.stayOn}
-        onChange={handlerChange}
-        name='stayOn'
-      >
-        Оставаться в системе 
+      <CheckBoxField value={data.stayOn} onChange={handlerChange} name="stayOn">
+        Оставаться в системе
       </CheckBoxField>
-      <button 
+      <button
         type="submit"
         disabled={!isValid}
         className="btn btn-primary w-100 mx-auto "

@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react'
 import { Qualities } from '../ui/qualities/Qualities'
 import { handleValuesForModify } from '../../utils/preparingEditDataForm'
 
 export const FullUserCard = ({ user, userId, history, qualities }) => {
-
   return (
     <>
       <div className="card mb-3">
         <div className="card-body">
           <button
-            onClick={() => handleValuesForModify(user, userId, history, qualities)}
+            onClick={() =>
+              handleValuesForModify(user, userId, history, qualities)
+            }
             className="position-absolute top-0 end-0 btn btn-light btn-sm"
           >
             <i className="bi bi-gear"></i>
@@ -60,5 +61,5 @@ export const FullUserCard = ({ user, userId, history, qualities }) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}

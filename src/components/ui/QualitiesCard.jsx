@@ -13,7 +13,7 @@ export const QualitiesCard = ({ data }) => {
           <Qualities qualities={data} />
         </p>
       </div>
-  </div>
+    </div>
   )
 }
 

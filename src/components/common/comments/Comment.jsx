@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import api from '../../../api'
 import { displayDate } from '../../../utils/displayDate'
 
@@ -10,23 +9,22 @@ export const Comment = ({
   userId,
   onRemove
 }) => {
-
   const [user, setUser] = useState()
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect (() => {
+  useEffect(() => {
     setIsLoading(true)
-    api.users.getById(userId).then(data => {
+    api.users.getById(userId).then((data) => {
       setUser(data)
       setIsLoading(false)
     })
   }, [])
-  
+
   return (
     <div className="bg-ligth card-body mb-3">
-    <div className="row">
+      <div className="row">
         {isLoading ? (
-          "Loading..."
+          'Loading...'
         ) : (
           <div className="col">
             <div className="d-flex flex-start">
@@ -45,12 +43,10 @@ export const Comment = ({
                 <div className="mb-4">
                   <div className="d-flex justify-content-between align-items-center">
                     <p className="mb-1">
-                      {user && user.name}{" "}
-                      <span className="small">
-                        - {displayDate(created)}
-                      </span>
+                      {user && user.name}{' '}
+                      <span className="small">- {displayDate(created)}</span>
                     </p>
-                    <button 
+                    <button
                       className="btn btn-sm text-primary d-flex align-items-center"
                       onClick={() => onRemove(id)}
                     >
@@ -61,10 +57,9 @@ export const Comment = ({
                 </div>
               </div>
             </div>
-        </div>
+          </div>
         )}
-
+      </div>
     </div>
-  </div>
   )
 }

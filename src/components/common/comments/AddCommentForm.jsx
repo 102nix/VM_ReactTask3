@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from 'react'
 import { SelectField } from '../form/SelectField'
 import { TextAreaField } from '../form/TextAreaField'
 import * as yup from 'yup'
 import api from '../../../api/index'
-const initialData = {userId: '', content: ''}
+const initialData = { userId: '', content: '' }
 
 export const AddCommentForm = ({ onSubmit }) => {
-  
   const [data, setData] = useState(initialData)
   const [users, setUsers] = useState({})
   const [errors, setErrors] = useState({})
@@ -17,24 +16,25 @@ export const AddCommentForm = ({ onSubmit }) => {
 
   const handlerChange = (target) => {
     console.log(target)
-    setData(prevSate => ({
+    setData((prevSate) => ({
       ...prevSate,
       [target.name]: target.value
     }))
   }
 
-  let validateScheme = yup.object().shape({
+  const validateScheme = yup.object().shape({
     content: yup.string().required('Необходимо заполнить комментарий'),
     userId: yup.string().required('Обязательно выберите пользователя')
   })
 
   const validate = () => {
-    validateScheme.validate(data)
+    validateScheme
+      .validate(data)
       .then(() => setErrors({}))
-      .catch(err => setErrors({[err.path]: err.message}))
+      .catch((err) => setErrors({ [err.path]: err.message }))
     return Object.keys(errors).length === 0
   }
-  
+
   const isValid = Object.keys(errors).length === 0
 
   useEffect(() => {
@@ -54,10 +54,12 @@ export const AddCommentForm = ({ onSubmit }) => {
     clearForm()
   }
 
-  const arrayOfUsers = users && Object.keys(users).map(userId => ({
-    name: users[userId].name,
-    value: users[userId]._id
-  }))
+  const arrayOfUsers =
+    users &&
+    Object.keys(users).map((userId) => ({
+      name: users[userId].name,
+      value: users[userId]._id
+    }))
 
   return (
     <div>
@@ -78,15 +80,10 @@ export const AddCommentForm = ({ onSubmit }) => {
           onChange={handlerChange}
           error={errors.content}
         />
-        <button
-          className="btn btn-primary"
-          type="submit"
-          disabled={!isValid}
-        >
+        <button className="btn btn-primary" type="submit" disabled={!isValid}>
           Опубликовать
         </button>
       </form>
     </div>
-
   )
 }

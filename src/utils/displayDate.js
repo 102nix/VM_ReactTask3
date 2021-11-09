@@ -1,4 +1,4 @@
-export function displayDate(data) {
+export function displayDate (data) {
   const date = new Date(parseInt(data))
 
   const dateNow = new Date()
@@ -19,14 +19,12 @@ export function displayDate(data) {
         }
         return '30 минут назад'
       }
-      return `${date.getHours()}:${date.getMinutes( )}`
+      return `${date.getHours()}:${date.getMinutes()}`
     }
 
-    return `${date.getDay()} ${date.toLocaleString("default", {
-      month: "long"
+    return `${date.getDay()} ${date.toLocaleString('default', {
+      month: 'long'
     })}`
   }
-  return (
-    date.getFullYear() + "." + (date.getMonth() + 1) + "_" + date.getDate()
-  )
+  return date.getFullYear() + '.' + (date.getMonth() + 1) + '_' + date.getDate()
 }

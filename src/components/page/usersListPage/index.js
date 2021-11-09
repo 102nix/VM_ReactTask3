@@ -1,2 +1,2 @@
-import { UsersListPage } from "./UsersListPage"
+import { UsersListPage } from './UsersListPage'
 export default UsersListPage

@@ -1,28 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export const GroupList = ({ items, valueProperty, contentProperty, onItemSelect, selectedItem }) => {
-
+export const GroupList = ({
+  items,
+  valueProperty,
+  contentProperty,
+  onItemSelect,
+  selectedItem
+}) => {
   console.log('items:', items)
-  
-  return (<ul className="list-group">
-    {Object.keys(items).map(item => (
-      <li
-        key={items[item][valueProperty]}
-        className={"list-group-item"+ (items[item] === selectedItem ? " active" : "")}
-        onClick={() => onItemSelect(items[item])}
-        role="button"
-      >
-        {items[item][contentProperty]}
-      </li>
-    ))}
-  </ul>)
+
+  return (
+    <ul className="list-group">
+      {Object.keys(items).map((item) => (
+        <li
+          key={items[item][valueProperty]}
+          className={
+            'list-group-item' + (items[item] === selectedItem ? ' active' : '')
+          }
+          onClick={() => onItemSelect(items[item])}
+          role="button"
+        >
+          {items[item][contentProperty]}
+        </li>
+      ))}
+    </ul>
+  )
 }
-GroupList.defaultProps={
-  valueProperty:'_id',
-  contentProperty:'name'
+GroupList.defaultProps = {
+  valueProperty: '_id',
+  contentProperty: 'name'
 }
-GroupList.protoTypes={
+GroupList.protoTypes = {
   items: PropTypes.object.isRequired,
   valueProperty: PropTypes.string.isRequired,
   contentProperty: PropTypes.string.isRequired,

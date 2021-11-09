@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 import { LoginForm } from '../components/ui/LoginForm'
 import { RegisterForm } from '../components/ui/RegisterForm'
 
 export const Login = () => {
-
-  const { type } = useParams()
+  // const { type } = useParams()
   // const [formType, setFormType] = useState(type === 'register' ? type: 'login')
   const [formType, setFormType] = useState('login')
 
   const toggleFormType = () => {
-    setFormType(prevState => prevState === 'register' ? 'login' : 'register')
+    setFormType((prevState) =>
+      prevState === 'register' ? 'login' : 'register'
+    )
   }
 
   return (
@@ -20,32 +21,30 @@ export const Login = () => {
           {formType === 'register' ? (
             <>
               <h3 className="mb-4">Register</h3>
-              <RegisterForm /> 
+              <RegisterForm />
               <p>
-                Already have acount?{" "} 
-                <a role='button' onClick={toggleFormType}>
-                  {" "}
+                Already have acount?{' '}
+                <a role="button" onClick={toggleFormType}>
+                  {' '}
                   Sign In
-                </a> 
+                </a>
               </p>
-            </> 
-            ) : (
+            </>
+          ) : (
             <>
               <h3 className="mb-4">Login</h3>
-              <LoginForm /> 
-                <p>
-                  Dont have acount?{" "} 
-                  <a role='button' onClick={toggleFormType}>
-                    {" "}
-                    Sign Up
-                  </a> 
-                </p>
+              <LoginForm />
+              <p>
+                Dont have acount?{' '}
+                <a role="button" onClick={toggleFormType}>
+                  {' '}
+                  Sign Up
+                </a>
+              </p>
             </>
-            )
-          }
-     </div>
-      </div>
+          )}
         </div>
+      </div>
+    </div>
   )
-  
-} 
+}
