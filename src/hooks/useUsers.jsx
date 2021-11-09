@@ -16,12 +16,14 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     getUsers()
   }, [])
+
   useEffect(() => {
     if (error !== null) {
       toast(error)
       setError(null)
     }
   }, [error])
+
   async function getUsers () {
     try {
       const { content } = await userService.get()

@@ -5,14 +5,17 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { Login } from './layouts/Login'
 import { Main } from './layouts/Main'
 import { ToastContainer } from 'react-toastify'
+import { ProfessionProvider } from './hooks/useProfession'
 
 export default function App () {
   return (
     <div className="container">
       <NavBar />
       <Switch>
-        <Route path="/users/:userId?/:edit?" component={Users} />
-        <Route path="/login/:type?" component={Login} />
+        <ProfessionProvider>
+          <Route path="/users/:userId?/:edit?" component={Users} />
+          <Route path="/login/:type?" component={Login} />
+        </ProfessionProvider>
         <Route exact path="/" component={Main} />
         <Redirect to="/" />
       </Switch>
