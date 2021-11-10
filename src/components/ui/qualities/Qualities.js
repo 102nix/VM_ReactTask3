@@ -1,18 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useQualities } from '../../../hooks/useQualities'
 
 export const Qualities = ({ qualities }) => {
+  const { getQuality } = useQualities()
+  const currentQualities = getQuality(qualities)
   return (
     <>
-      {qualities.map((el) => (
-        <span className={`badge bg-${el.color}`} key={el._id}>
-          {el.name}
-        </span>
-      ))}
+      {currentQualities.map(q => (
+        <span className={`badge bg-${q.color}`} key={q._id}>
+          {q.name}
+        </span>))
+      }
     </>
   )
 }
 
 Qualities.propTypes = {
-  qualities: PropTypes.array.isRequired
+  qualities: PropTypes.array
 }
