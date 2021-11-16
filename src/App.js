@@ -12,16 +12,16 @@ export default function App () {
   return (
     <div className="container">
       <NavBar />
-      <Switch>
-        <ProfessionProvider>
-          <QualitiesProvider>
+      <ProfessionProvider>
+        <QualitiesProvider>
+          <Switch>
             <Route path="/users/:userId?/:edit?" component={Users} />
             <Route path="/login/:type?" component={Login} />
-          </QualitiesProvider>
-        </ProfessionProvider>
-        <Route exact path="/" component={Main} />
-        <Redirect to="/" />
-      </Switch>
+            <Route exact path="/" component={Main} />
+            <Redirect to="/" />
+          </Switch>
+        </QualitiesProvider>
+      </ProfessionProvider>
       <ToastContainer />
     </div>
   )
