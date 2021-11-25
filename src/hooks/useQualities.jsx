@@ -44,7 +44,7 @@ export const QualitiesProvider = ({ children }) => {
       setError(null)
     }
   }, [error])
-  return <QualitiesContext.Provider value={{ getQuality }}>
+  return <QualitiesContext.Provider value={{ qualities, getQuality }}>
     {!isLoading ? children : <h1>Qualities loading...</h1>
     }
   </QualitiesContext.Provider>
