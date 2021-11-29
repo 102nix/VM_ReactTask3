@@ -14,9 +14,9 @@ export const LoginForm = () => {
     password: '',
     stayOn: false
   })
-
   const { signIn } = useAuth()
   const [errors, setErrors] = useState({})
+  const [enterErrors, setEnterErrors] = useState(null)
 
   const handlerChange = (target) => {
     console.log(target)
@@ -24,6 +24,7 @@ export const LoginForm = () => {
       ...prevSate,
       [target.name]: target.value
     }))
+    setEnterErrors(null)
   }
 
   const validate = () => {
@@ -41,21 +42,10 @@ export const LoginForm = () => {
   const validateScheme = yup.object().shape({
     password: yup
       .string()
-      .required('Пароль обязателен для заполнения')
-      .matches(
-        /(?=.*[A-Z])/,
-        'Пароль должен содержать хотябы 1 заглавную букву'
-      )
-      .matches(/(?=.*[0-9])/, 'Пароль должен содержать хотябы 1 число')
-      // .matches(
-      //   /(?=.*[!@#$%^&*])/,
-      //   'Пароль должен содержать один из специальных символов !@#$%^&*'
-      // )
-      .matches(/(?=.{8,})/, 'Пароль должен состоять минимум из 8 символов'),
+      .required('Пароль обязателен для заполнения'),
     email: yup
       .string()
       .required('Email обязательно для заполнения')
-      .email('Email введён некорректно')
   })
 
   // const validatorConfig = {
@@ -97,7 +87,7 @@ export const LoginForm = () => {
       await signIn(data)
       history.push('/')
     } catch (error) {
-      setErrors(error)
+      setEnterErrors(error.message)
     }
   }
 
@@ -121,9 +111,10 @@ export const LoginForm = () => {
       <CheckBoxField value={data.stayOn} onChange={handlerChange} name="stayOn">
         Оставаться в системе
       </CheckBoxField>
+      {enterErrors && <p className="text-danger">{enterErrors}</p>}
       <button
         type="submit"
-        disabled={!isValid}
+        disabled={!isValid || enterErrors}
         className="btn btn-primary w-100 mx-auto "
       >
         Submit
