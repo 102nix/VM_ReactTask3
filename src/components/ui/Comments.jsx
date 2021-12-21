@@ -4,10 +4,11 @@ import api from '../../api/'
 import { useParams } from 'react-router-dom'
 import { AddCommentForm } from '../common/comments/AddCommentForm'
 import { CommentsList } from '../common/comments/CommentsList'
+import { useComments } from '../../hooks/useComments'
 
 export const Comments = () => {
   const { userId } = useParams()
-
+  const { createComment } = useComments()
   const [comments, setComments] = useState([])
 
   useEffect(() => {
@@ -15,9 +16,10 @@ export const Comments = () => {
   }, [])
 
   const handleSubmit = (data) => {
-    api.comments
-      .add({ ...data, pageId: userId })
-      .then((data) => setComments([...comments, data]))
+    createComment(data)
+    // api.comments
+    //   .add({ ...data, pageId: userId })
+    //   .then((data) => setComments([...comments, data]))
   }
 
   const handleRemoveComment = (id) => {

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { SelectField } from '../form/SelectField'
 import { TextAreaField } from '../form/TextAreaField'
 import * as yup from 'yup'
-import api from '../../../api/index'
-const initialData = { userId: '', content: '' }
 
 export const AddCommentForm = ({ onSubmit }) => {
-  const [data, setData] = useState(initialData)
-  const [users, setUsers] = useState({})
+  const [data, setData] = useState({})
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
@@ -23,8 +19,7 @@ export const AddCommentForm = ({ onSubmit }) => {
   }
 
   const validateScheme = yup.object().shape({
-    content: yup.string().required('Необходимо заполнить комментарий'),
-    userId: yup.string().required('Обязательно выберите пользователя')
+    content: yup.string().required('Необходимо заполнить комментарий')
   })
 
   const validate = () => {
@@ -37,12 +32,8 @@ export const AddCommentForm = ({ onSubmit }) => {
 
   const isValid = Object.keys(errors).length === 0
 
-  useEffect(() => {
-    api.users.fetchAll().then(setUsers)
-  }, [])
-
   const clearForm = () => {
-    setData(initialData)
+    setData({})
     setErrors({})
   }
 
@@ -54,29 +45,14 @@ export const AddCommentForm = ({ onSubmit }) => {
     clearForm()
   }
 
-  const arrayOfUsers =
-    users &&
-    Object.keys(users).map((userId) => ({
-      name: users[userId].name,
-      value: users[userId]._id
-    }))
-
   return (
     <div>
       <h2>New comment</h2>
       <form onSubmit={handleSubmit}>
-        <SelectField
-          defaultOption="Выберите пользователя"
-          options={arrayOfUsers}
-          onChange={handlerChange}
-          value={data.userId}
-          error={errors.userId}
-          name="userId"
-        />
         <TextAreaField
           label="Сообщение"
           name="content"
-          value={data.content}
+          value={data.content || ''}
           onChange={handlerChange}
           error={errors.content}
         />
