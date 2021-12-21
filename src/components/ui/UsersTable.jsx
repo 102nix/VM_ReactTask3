@@ -12,8 +12,7 @@ export const UsersTable = ({
   users,
   onSort,
   onStatus,
-  selectedSort,
-  onDelete
+  selectedSort
 }) => {
   const columns = {
     // name: {path:'name', name:'Имя'},
@@ -39,17 +38,6 @@ export const UsersTable = ({
           id={user._id}
         />
       )
-    },
-    delete: {
-      component: (user) => (
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => onDelete(user._id)}
-        >
-          delete
-        </button>
-      )
     }
   }
 
@@ -66,6 +54,5 @@ export const UsersTable = ({
 UsersTable.protoTypes = {
   users: PropTypes.array.isRequired,
   onSort: PropTypes.func.isRequired,
-  currentSort: PropTypes.object.isRequired,
-  onDelete: PropTypes.func.isRequired
+  currentSort: PropTypes.object.isRequired
 }
