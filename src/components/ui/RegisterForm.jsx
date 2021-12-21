@@ -17,6 +17,7 @@ export const RegisterForm = () => {
     password: '',
     profession: '',
     sex: 'male',
+    name: '',
     qualities: [],
     licence: false
   })
@@ -49,6 +50,15 @@ export const RegisterForm = () => {
       },
       isEmail: {
         message: 'Email введён некорректно'
+      }
+    },
+    name: {
+      isRequired: {
+        message: 'Имя обязательно для заполнения'
+      },
+      min: {
+        message: 'Имя должно состоять минимум из 3 символов',
+        value: 3
       }
     },
     password: {
@@ -104,6 +114,13 @@ export const RegisterForm = () => {
         value={data.email}
         onChange={handlerChange}
         error={errors.email}
+      />
+      <TextField
+        label="Имя"
+        name="name"
+        value={data.name}
+        onChange={handlerChange}
+        error={errors.name}
       />
       <TextField
         label="Пароль"
