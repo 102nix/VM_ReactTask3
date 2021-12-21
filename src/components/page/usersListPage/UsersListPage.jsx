@@ -7,9 +7,11 @@ import { UsersTable } from '../../ui/UsersTable'
 import _ from 'lodash'
 import { useUser } from '../../../hooks/useUsers'
 import { useProfessions } from '../../../hooks/useProfession'
+import { useAuth } from '../../../hooks/useAuth'
 
 export const UsersListPage = () => {
   const { users } = useUser()
+  const { currentUser } = useAuth()
   const { isLoading: professionsLoading, professions } = useProfessions()
   const [selectedProf, setSelectedProf] = useState()
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
@@ -55,12 +57,17 @@ export const UsersListPage = () => {
     setCurrentPage(pageIndex)
   }
 
-  const filteredUsers = selectedProf ? (
-    users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
-  ) : (
-    users
-  )
+  function filterUsers (data) {
+    const filteredUsers = selectedProf ? (
+      data.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
+    ) : (
+      data
+    )
+    console.log('??', filteredUsers)
+    return filteredUsers.filter(u => u._id !== currentUser._id)
+  }
 
+  const filteredUsers = filterUsers(users)
   const count = filteredUsers.length
 
   const sortedUsers = _.orderBy(findUsersArr || filteredUsers, [sortBy.path], [sortBy.order]) // findUsersArr ? findUsersArr : filteredUsers
