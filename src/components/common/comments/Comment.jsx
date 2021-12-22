@@ -19,7 +19,7 @@ export const Comment = ({
           <div className="d-flex flex-start">
             <img
               src={user.image}
-              classNameName="rounded-circle shadow-1-strong me-3"
+              className="rounded-circle shadow-1-strong me-3"
               alt="avatar"
               width="65"
               height="65"

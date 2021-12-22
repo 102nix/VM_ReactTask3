@@ -22,7 +22,7 @@ export const FullUserCard = ({ user, userId, history, qualities }) => {
               )
                 .toString(36)
                 .substring(7)}.svg`}
-              classNameName="rounded-circle shadow-1-strong me-3"
+              className="rounded-circle shadow-1-strong me-3"
               alt="avatar"
               width="65"
               height="65"
