@@ -92,7 +92,6 @@ const AuthProvider = ({ children }) => {
     setError(message)
   }
   async function getUserData () {
-    console.log('-------getCurrentUser-----------')
     try {
       const { content } = await userService.getCurrentUser()
       setUser(content)

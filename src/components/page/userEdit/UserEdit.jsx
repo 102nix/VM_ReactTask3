@@ -6,26 +6,32 @@ import { MultiSelectField } from '../../common/form/MultiSelectField'
 import { useParams, useHistory } from 'react-router-dom'
 import {
   prepareQualities,
-  transformationQualities,
   getProfessionById
 } from '../../../utils/preparingEditDataForm'
 import api from '../../../api/index'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
+import { useQualities } from '../../../hooks/useQualities'
+import { useProfessions } from '../../../hooks/useProfession'
 
 export const UserEdit = () => {
   const { userId } = useParams()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState({
+    name: '',
     email: '',
     password: '',
     profession: '',
     sex: 'male',
     qualities: []
   })
-  const [professions, setProfessions] = useState([])
-  const [qualities, setQualities] = useState({})
+  // const [professions, setProfessions] = useState([])
+  // const [qualities, setQualities] = useState({})
+  const { qualities } = useQualities()
+  const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
+  const { professions } = useProfessions()
+  const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
 
   const handlerChange = (target) => {
@@ -74,18 +80,18 @@ export const UserEdit = () => {
       .then((data) => history.push(`/users/${data._id}`))
   }
 
-  useEffect(() => {
-    setIsLoading(true)
-    api.users.getById(userId).then(({ profession, ...data }) =>
-      setData((prevState) => ({
-        ...prevState,
-        ...data,
-        profession: profession._id
-      }))
-    )
-    api.qualities.fetchAll().then((data) => setQualities(data))
-    api.professions.fetchAll().then((data) => setProfessions(data))
-  }, [])
+  // useEffect(() => {
+  //   setIsLoading(true)
+  //   api.users.getById(userId).then(({ profession, ...data }) =>
+  //     setData((prevState) => ({
+  //       ...prevState,
+  //       ...data,
+  //       profession: profession._id
+  //     }))
+  //   )
+  //   api.qualities.fetchAll().then((data) => setQualities(data))
+  //   api.professions.fetchAll().then((data) => setProfessions(data))
+  // }, [])
   useEffect(() => {
     if (data._id) setIsLoading(false)
   }, [data])
@@ -114,11 +120,11 @@ export const UserEdit = () => {
               <SelectField
                 label="Выберите свою профессию"
                 defaultOption="Choose..."
-                options={professions}
+                name="profession"
+                options={professionsList}
                 onChange={handlerChange}
                 value={data.profession}
                 error={errors.profession}
-                name="profession"
               />
               <RadioField
                 options={[
@@ -132,9 +138,7 @@ export const UserEdit = () => {
                 label="Выберите ваш пол"
               />
               <MultiSelectField
-                // defaultValue={data.qualities}
-                options={qualities}
-                values={transformationQualities(qualities, data.qualities)}
+                options={qualitiesList}
                 onChange={handlerChange}
                 name="qualities"
                 label="Выберете ваши качества"

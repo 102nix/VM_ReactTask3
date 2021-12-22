@@ -16,7 +16,6 @@ const userService = {
     const { data } = await httpService.get(
       userEndpoint + localStorageService.getUserId()
     )
-    console.log('QQQQQQQQQQQQQQQQQq', data)
     return data
   }
 }
