@@ -3,36 +3,30 @@ import { TextField } from '../../common/form/TextField'
 import { SelectField } from '../../common/form/SelectField'
 import { RadioField } from '../../common/form/RadioField'
 import { MultiSelectField } from '../../common/form/MultiSelectField'
-import { useParams, useHistory } from 'react-router-dom'
-import {
-  prepareQualities,
-  getProfessionById
-} from '../../../utils/preparingEditDataForm'
-import api from '../../../api/index'
+import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
 import { useQualities } from '../../../hooks/useQualities'
 import { useProfessions } from '../../../hooks/useProfession'
+import { useAuth } from '../../../hooks/useAuth'
 
 export const UserEdit = () => {
-  const { userId } = useParams()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    profession: '',
-    sex: 'male',
-    qualities: []
-  })
-  // const [professions, setProfessions] = useState([])
-  // const [qualities, setQualities] = useState({})
   const { qualities } = useQualities()
   const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
   const { professions } = useProfessions()
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
+  const { currentUser, createUser } = useAuth()
+  const [data, setData] = useState({
+    name: currentUser.name,
+    email: currentUser.email,
+    password: '',
+    profession: '',
+    sex: 'male',
+    qualities: []
+  })
 
   const handlerChange = (target) => {
     setData((prevSate) => ({
@@ -64,34 +58,25 @@ export const UserEdit = () => {
     validate()
   }, [data])
 
-  // //////////////////////////////////////////////////
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const isValid = validate()
     if (!isValid) return
-
-    const { profession, qualities } = data
-    api.users
-      .update(userId, {
-        ...data,
-        profession: getProfessionById(professions, profession),
-        qualities: prepareQualities(qualities, data.qualities)
+    try {
+      await createUser({
+        _id: currentUser._id,
+        email: data.email,
+        rate: data.rate,
+        completedMeetings: data.completedMeetings,
+        image: currentUser.image,
+        qualities: data.qualities.map(q => q.value),
+        ...data
       })
-      .then((data) => history.push(`/users/${data._id}`))
+      history.push('/')
+    } catch (error) {
+      setErrors(error)
+    }
   }
-
-  // useEffect(() => {
-  //   setIsLoading(true)
-  //   api.users.getById(userId).then(({ profession, ...data }) =>
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       ...data,
-  //       profession: profession._id
-  //     }))
-  //   )
-  //   api.qualities.fetchAll().then((data) => setQualities(data))
-  //   api.professions.fetchAll().then((data) => setProfessions(data))
-  // }, [])
   useEffect(() => {
     if (data._id) setIsLoading(false)
   }, [data])

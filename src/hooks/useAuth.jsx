@@ -80,6 +80,7 @@ const AuthProvider = ({ children }) => {
     }
   }
   async function createUser (data) {
+    console.log('Creating user...', data)
     try {
       const { content } = await userService.create(data)
       setUser(content)
@@ -115,7 +116,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [error])
   return (
-    <AuthContext.Provider value={{ signUp, signIn, currentUser, logOut }}>
+    <AuthContext.Provider value={{ signUp, signIn, currentUser, logOut, createUser }}>
       { !isLoading ? children : 'Loading...'}
     </AuthContext.Provider>
   )
