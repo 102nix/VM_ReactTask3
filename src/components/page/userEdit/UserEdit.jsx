@@ -3,7 +3,7 @@ import { TextField } from '../../common/form/TextField'
 import { SelectField } from '../../common/form/SelectField'
 import { RadioField } from '../../common/form/RadioField'
 import { MultiSelectField } from '../../common/form/MultiSelectField'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
 import { useQualities } from '../../../hooks/useQualities'
@@ -11,28 +11,40 @@ import { useProfessions } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
 
 export const UserEdit = () => {
-  const history = useHistory()
+  // const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const { qualities } = useQualities()
   const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
   const { professions } = useProfessions()
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
-  const { currentUser, createUser } = useAuth()
+  const { currentUser, updateUser } = useAuth()
   const [data, setData] = useState({
     name: currentUser.name,
     email: currentUser.email,
-    password: '',
-    profession: '',
-    sex: 'male',
-    qualities: []
+    profession: currentUser.profession,
+    sex: currentUser.sex,
+    qualities: compareQualities()
   })
-
+  console.log(currentUser, qualities)
   const handlerChange = (target) => {
     setData((prevSate) => ({
       ...prevSate,
       [target.name]: target.value
     }))
+  }
+
+  function compareQualities () {
+    const resQualities = []
+    for (let i = 0; i < qualities.length; i++) {
+      const temp = qualities[i]
+      for (let j = 0; j < currentUser.qualities.length; j++) {
+        if (temp._id === currentUser.qualities[j]) {
+          resQualities.push(qualities[i])
+        }
+      }
+    }
+    return resQualities.map(q => ({ label: q.name, value: q._id }))
   }
 
   const validateScheme = yup.object().shape({
@@ -63,16 +75,14 @@ export const UserEdit = () => {
     const isValid = validate()
     if (!isValid) return
     try {
-      await createUser({
-        _id: currentUser._id,
+      await updateUser({
+        ...currentUser,
         email: data.email,
-        rate: data.rate,
-        completedMeetings: data.completedMeetings,
-        image: currentUser.image,
-        qualities: data.qualities.map(q => q.value),
-        ...data
+        name: data.name,
+        profession: data.profession,
+        sex: data.sex,
+        qualities: data.qualities.map(q => q.value)
       })
-      history.push('/')
     } catch (error) {
       setErrors(error)
     }
@@ -127,6 +137,7 @@ export const UserEdit = () => {
                 onChange={handlerChange}
                 name="qualities"
                 label="Выберете ваши качества"
+                values={data.qualities}
               />
               <button
                 type="submit"

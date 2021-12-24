@@ -9,9 +9,6 @@ export const MultiSelectField = ({
   label,
   values
 }) => {
-  console.log('Default-Qualities: ', options)
-  console.log('Used qualities: ', values)
-
   const optionsArray = !Array.isArray(options) && typeof options === 'object' ? (
     Object.keys(options).map((optionName) => ({
       label: options[optionName].name,
@@ -26,6 +23,11 @@ export const MultiSelectField = ({
     onChange({ name: name, value: value })
   }
 
+  const adaptDefaultValues = (arr) => {
+    if (arr) return [...arr]
+    return []
+  }
+
   return (
     <div className="mb-4">
       <label className="form-label">{label}</label>
@@ -37,7 +39,7 @@ export const MultiSelectField = ({
         classNamePrefix="select"
         onChange={handleChange}
         name={name}
-        value={values}
+        defaultValue={adaptDefaultValues(values)}
       />
     </div>
   )
