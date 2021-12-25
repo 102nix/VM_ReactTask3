@@ -3,7 +3,7 @@ import { TextField } from '../../common/form/TextField'
 import { SelectField } from '../../common/form/SelectField'
 import { RadioField } from '../../common/form/RadioField'
 import { MultiSelectField } from '../../common/form/MultiSelectField'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
 import { useQualities } from '../../../hooks/useQualities'
@@ -11,21 +11,15 @@ import { useProfessions } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
 
 export const UserEdit = () => {
-  // const history = useHistory()
-  const [isLoading, setIsLoading] = useState(false)
-  const { qualities } = useQualities()
+  const history = useHistory()
+  const [isLoading, setIsLoading] = useState(true)
+  const { qualities, isLoading: qualitiesLoading } = useQualities()
+  const { professions, isLoading: professionLoading } = useProfessions()
   const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
-  const { professions } = useProfessions()
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
-  const { currentUser, updateUser } = useAuth()
-  const [data, setData] = useState({
-    name: currentUser.name,
-    email: currentUser.email,
-    profession: currentUser.profession,
-    sex: currentUser.sex,
-    qualities: compareQualities()
-  })
+  const { currentUser, updateUserData } = useAuth()
+  const [data, setData] = useState()
   console.log(currentUser, qualities)
   const handlerChange = (target) => {
     setData((prevSate) => ({
@@ -75,7 +69,7 @@ export const UserEdit = () => {
     const isValid = validate()
     if (!isValid) return
     try {
-      await updateUser({
+      await updateUserData({
         ...currentUser,
         email: data.email,
         name: data.name,
@@ -83,12 +77,26 @@ export const UserEdit = () => {
         sex: data.sex,
         qualities: data.qualities.map(q => q.value)
       })
+      history.push(`/users/${currentUser._id}`)
     } catch (error) {
       setErrors(error)
     }
   }
   useEffect(() => {
-    if (data._id) setIsLoading(false)
+    if (!professionLoading && !qualitiesLoading && currentUser && !data) {
+      setData({
+        name: currentUser.name,
+        email: currentUser.email,
+        profession: currentUser.profession,
+        sex: currentUser.sex,
+        qualities: compareQualities()
+      })
+    }
+  }, [professionLoading, qualitiesLoading, currentUser, data])
+  useEffect(() => {
+    if (data && isLoading) {
+      setIsLoading(false)
+    }
   }, [data])
 
   return (
