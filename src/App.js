@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Users } from './layouts/Users'
 import { NavBar } from './components/ui/NavBar'
 import { Redirect, Route, Switch } from 'react-router-dom'
@@ -10,8 +10,14 @@ import { QualitiesProvider } from './hooks/useQualities'
 import AuthProvider from './hooks/useAuth'
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LogOut } from './layouts/LogOut'
+import { useDispatch } from 'react-redux'
+import { loadQualitiesList } from './store/qualities'
 
 export default function App () {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(loadQualitiesList())
+  }, [])
   return (
     <div className="container">
       <AuthProvider>
