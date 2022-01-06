@@ -6,17 +6,18 @@ import { MultiSelectField } from '../../common/form/MultiSelectField'
 import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
-import { useProfessions } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSelector } from 'react-redux'
 import { getQualities, getQualitiesLoadingStatus } from '../../../store/qualities'
+import { getProfession, getProfessionLoadingStatus } from '../../../store/profession'
 
 export const UserEdit = () => {
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(true)
   const qualities = useSelector(getQualities())
   const qualitiesLoading = useSelector(getQualitiesLoadingStatus())
-  const { professions, isLoading: professionLoading } = useProfessions()
+  const professions = useSelector(getProfession())
+  const professionLoading = useSelector(getProfessionLoadingStatus())
   const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})

@@ -6,13 +6,15 @@ import { GroupList } from '../../common/GroupList'
 import { UsersTable } from '../../ui/UsersTable'
 import _ from 'lodash'
 import { useUser } from '../../../hooks/useUsers'
-import { useProfessions } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import { getProfession, getProfessionLoadingStatus } from '../../../store/profession'
 
 export const UsersListPage = () => {
   const { users } = useUser()
   const { currentUser } = useAuth()
-  const { isLoading: professionsLoading, professions } = useProfessions()
+  const professions = useSelector(getProfession())
+  const professionsLoading = useSelector(getProfessionLoadingStatus())
   const [selectedProf, setSelectedProf] = useState()
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' })
 
