@@ -1,7 +1,8 @@
 import React from 'react'
-import { useUser } from '../../../hooks/useUsers'
 import { displayDate } from '../../../utils/displayDate'
 import { useAuth } from '../../../hooks/useAuth'
+import { getUserById } from '../../../store/users'
+import { useSelector } from 'react-redux'
 
 export const Comment = ({
   content,
@@ -10,9 +11,8 @@ export const Comment = ({
   userId,
   onRemove
 }) => {
-  const { getUserById } = useUser()
   const { currentUser } = useAuth()
-  const user = getUserById(userId)
+  const user = useSelector(getUserById(userId))
 
   return (
     <div className="bg-ligth card-body mb-3">

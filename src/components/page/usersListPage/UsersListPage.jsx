@@ -5,13 +5,13 @@ import { paginate } from '../../../utils/paginate'
 import { GroupList } from '../../common/GroupList'
 import { UsersTable } from '../../ui/UsersTable'
 import _ from 'lodash'
-import { useUser } from '../../../hooks/useUsers'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSelector } from 'react-redux'
 import { getProfession, getProfessionLoadingStatus } from '../../../store/profession'
+import { getUsersList } from '../../../store/users'
 
 export const UsersListPage = () => {
-  const { users } = useUser()
+  const users = useSelector(getUsersList())
   const { currentUser } = useAuth()
   const professions = useSelector(getProfession())
   const professionsLoading = useSelector(getProfessionLoadingStatus())
