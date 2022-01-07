@@ -3,8 +3,9 @@ import { TextField } from '../common/form/TextField'
 // import { validator } from '../../utils/validator'
 import { CheckBoxField } from '../common/form/CheckBoxField'
 import * as yup from 'yup'
-import { useAuth } from '../../hooks/useAuth'
 import { useHistory } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { logIn } from '../../store/users'
 
 export const LoginForm = () => {
   console.log(process.env)
@@ -14,7 +15,7 @@ export const LoginForm = () => {
     password: '',
     stayOn: false
   })
-  const { signIn } = useAuth()
+  const dispatch = useDispatch()
   const [errors, setErrors] = useState({})
   const [enterErrors, setEnterErrors] = useState(null)
 
@@ -78,17 +79,12 @@ export const LoginForm = () => {
     validate()
   }, [data])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     const isValid = validate()
     if (!isValid) return
-    console.log(data)
-    try {
-      await signIn(data)
-      history.push(history.location.state ? history.location.state.from.pathname : '/')
-    } catch (error) {
-      setEnterErrors(error.message)
-    }
+    const redirect = history.location.state ? history.location.state.from.pathname : '/'
+    dispatch(logIn({ payload: data, redirect }))
   }
 
   return (
