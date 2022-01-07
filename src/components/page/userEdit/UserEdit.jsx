@@ -10,6 +10,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useSelector } from 'react-redux'
 import { getQualities, getQualitiesLoadingStatus } from '../../../store/qualities'
 import { getProfession, getProfessionLoadingStatus } from '../../../store/profession'
+import { getCurrentUserData } from '../../../store/users'
 
 export const UserEdit = () => {
   const history = useHistory()
@@ -21,7 +22,8 @@ export const UserEdit = () => {
   const qualitiesList = qualities.map(q => ({ label: q.name, value: q._id }))
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
-  const { currentUser, updateUserData } = useAuth()
+  const currentUser = useSelector(getCurrentUserData())
+  const { updateUserData } = useAuth()
   const [data, setData] = useState()
   console.log(currentUser, qualities)
   const handlerChange = (target) => {
