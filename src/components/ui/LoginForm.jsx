@@ -4,11 +4,12 @@ import { TextField } from '../common/form/TextField'
 import { CheckBoxField } from '../common/form/CheckBoxField'
 import * as yup from 'yup'
 import { useHistory } from 'react-router'
-import { useDispatch } from 'react-redux'
-import { logIn } from '../../store/users'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAuthError, logIn } from '../../store/users'
 
 export const LoginForm = () => {
   console.log(process.env)
+  const loginError = useSelector(getAuthError())
   const history = useHistory()
   const [data, setData] = useState({
     email: '',
@@ -17,7 +18,6 @@ export const LoginForm = () => {
   })
   const dispatch = useDispatch()
   const [errors, setErrors] = useState({})
-  const [enterErrors, setEnterErrors] = useState(null)
 
   const handlerChange = (target) => {
     console.log(target)
@@ -25,7 +25,6 @@ export const LoginForm = () => {
       ...prevSate,
       [target.name]: target.value
     }))
-    setEnterErrors(null)
   }
 
   const validate = () => {
@@ -107,10 +106,11 @@ export const LoginForm = () => {
       <CheckBoxField value={data.stayOn} onChange={handlerChange} name="stayOn">
         Оставаться в системе
       </CheckBoxField>
-      {enterErrors && <p className="text-danger">{enterErrors}</p>}
+      {loginError && <p className="text-danger">{loginError}</p>}
+
       <button
         type="submit"
-        disabled={!isValid || enterErrors}
+        disabled={!isValid}
         className="btn btn-primary w-100 mx-auto "
       >
         Submit
