@@ -47,6 +47,9 @@ const usersSlice = createSlice({
     userCreated: (state, action) => {
       state.entities.push(action.payload)
     },
+    userUpdated: (state, action) => {
+      state.entities = action.payload
+    },
     userLoggedout: (state) => {
       state.entities = null
       state.isLoggedIn = false
@@ -57,11 +60,12 @@ const usersSlice = createSlice({
 })
 
 const { reducer: usersReducer, actions } = usersSlice
-const { usersRequested, usersReceived, usersRequestFiled, authRequestSuccess, authRequestFailed, userCreated, userLoggedout } = actions
+const { usersRequested, usersReceived, usersRequestFiled, authRequestSuccess, authRequestFailed, userCreated, userUpdated, userLoggedout } = actions
 
 const authRequested = createAction('users/authRequested')
 const userCreateRequested = createAction('users/userCreateRequested')
 const createUserFailed = createAction('users/createUserFailed')
+const updateUserFailed = createAction('users/updateUserFailed')
 
 export const logIn = ({ payload, redirect }) => async (dispatch) => {
   const { email, password } = payload
@@ -110,6 +114,29 @@ function createUser (payload) {
       history.push('/users')
     } catch (error) {
       dispatch(createUserFailed(error.message))
+    }
+  }
+}
+
+export const getUpdateUserData = (payload) => (dispatch) => {
+  console.log(payload)
+  dispatch(updateUserData(payload))
+}
+
+function updateUserData (payload) {
+  return async function (dispatch, getState) {
+    try {
+      const { content } = await userService.update(payload)
+      console.log(content, getState().users.entities)
+      const changedArr = getState().users.entities.map(u => {
+        if (u._id === content._id) return content
+        return u
+      })
+      dispatch(userUpdated(changedArr))
+      history.push(`/users/${getState().users.auth.userId}`)
+    } catch (error) {
+      dispatch(updateUserFailed(error.message))
+      console.log(error)
     }
   }
 }

@@ -3,17 +3,16 @@ import { TextField } from '../../common/form/TextField'
 import { SelectField } from '../../common/form/SelectField'
 import { RadioField } from '../../common/form/RadioField'
 import { MultiSelectField } from '../../common/form/MultiSelectField'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import { BackHistoryButton } from '../../common/form/BackButton'
-import { useAuth } from '../../../hooks/useAuth'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getQualities, getQualitiesLoadingStatus } from '../../../store/qualities'
 import { getProfession, getProfessionLoadingStatus } from '../../../store/profession'
-import { getCurrentUserData } from '../../../store/users'
+import { getCurrentUserData, getUpdateUserData } from '../../../store/users'
 
 export const UserEdit = () => {
-  const history = useHistory()
+  // const history = useHistory()
   const [isLoading, setIsLoading] = useState(true)
   const qualities = useSelector(getQualities())
   const qualitiesLoading = useSelector(getQualitiesLoadingStatus())
@@ -23,7 +22,8 @@ export const UserEdit = () => {
   const professionsList = professions.map(p => ({ label: p.name, value: p._id }))
   const [errors, setErrors] = useState({})
   const currentUser = useSelector(getCurrentUserData())
-  const { updateUserData } = useAuth()
+  // const updateUserData = useSelector(getUpdateUserData())
+  const dispatch = useDispatch()
   const [data, setData] = useState()
   console.log(currentUser, qualities)
   const handlerChange = (target) => {
@@ -73,19 +73,27 @@ export const UserEdit = () => {
     e.preventDefault()
     const isValid = validate()
     if (!isValid) return
-    try {
-      await updateUserData({
-        ...currentUser,
-        email: data.email,
-        name: data.name,
-        profession: data.profession,
-        sex: data.sex,
-        qualities: data.qualities.map(q => q.value)
-      })
-      history.push(`/users/${currentUser._id}`)
-    } catch (error) {
-      setErrors(error)
-    }
+    // try {
+    //   await updateUserData({
+    //     ...currentUser,
+    //     email: data.email,
+    //     name: data.name,
+    //     profession: data.profession,
+    //     sex: data.sex,
+    //     qualities: data.qualities.map(q => q.value)
+    //   })
+    //   history.push(`/users/${currentUser._id}`)
+    // } catch (error) {
+    //   setErrors(error)
+    // }
+    dispatch(getUpdateUserData({
+      ...currentUser,
+      email: data.email,
+      name: data.name,
+      profession: data.profession,
+      sex: data.sex,
+      qualities: data.qualities.map(q => q.value)
+    }))
   }
   useEffect(() => {
     if (!professionLoading && !qualitiesLoading && currentUser && !data) {
